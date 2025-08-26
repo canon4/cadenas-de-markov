@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Cadenas de Markov</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="./js/script.js"></script>
+    <style>
+      .resaltado {
+        background-color: #d4edda !important;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body class="p-4">
+    <div class="container">
+      <h1 class="mb-4">Calculadora de Cadenas de Markov</h1>
+
+      <button
+        type="button"
+        class="btn btn-info mb-3"
+        data-bs-toggle="modal"
+        data-bs-target="#instruccionesModal"
+      >
+        Ver instrucciones de uso
+      </button>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="instruccionesModal"
+        tabindex="-1"
+        aria-labelledby="instruccionesModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="instruccionesModalLabel">
+                Instrucciones de uso
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Cerrar"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <ul>
+                <li>
+                  Selecciona el tipo de cadena (absorbente o no absorbente).
+                </li>
+                <li>
+                  Indica el número de estados y la cantidad de pasos para la
+                  proyección.
+                </li>
+                <li>
+                  Presiona "Generar matriz y vector" para crear los campos de
+                  entrada.
+                </li>
+                <li>
+                  Llena la matriz de transición y el vector de estado inicial.
+                  Puedes usar "Llenar con valores aleatorios".
+                </li>
+                <li>
+                  Presiona "Calcular" para obtener la proyección y, si es
+                  absorbente, la matriz fundamental y de absorción.
+                </li>
+                <li>
+                  Los resultados se muestran en tablas claras y resaltan los
+                  estados absorbentes.
+                </li>
+                <li>
+                  Usa "Limpiar matriz" para borrar los datos y empezar de nuevo.
+                </li>
+                <li>
+                  En los campos, puedes usar la tecla Enter para pasar al
+                  siguiente.
+                </li>
+              </ul>
+
+              <hr />
+
+              <h6>Guía de resultados</h6>
+              <ul>
+                <li>
+                  <strong>Proyección de estado:</strong> Vector que muestra la
+                  distribución de probabilidad después de n pasos.
+                </li>
+                <li>
+                  <strong>Estados absorbentes:</strong> Estados que, una vez
+                  alcanzados, no se abandonan (probabilidad 1 en sí mismo, 0 en
+                  otros).
+                </li>
+                <li>
+                  <strong>Matriz fundamental (N):</strong> Describe el
+                  comportamiento esperado de los estados transitorios antes de
+                  ser absorbidos.
+                </li>
+                <li>
+                  <strong>Matriz de absorción (B):</strong> Probabilidades de
+                  terminar en cada estado absorbente desde cada estado
+                  transitorio.
+                </li>
+                <li>
+                  Los estados absorbentes se resaltan en la tabla final para
+                  fácil identificación.
+                </li>
+                <li>
+                  Si la cadena es no absorbente, sólo verás la proyección de
+                  estado.
+                </li>
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="tipoCadena" class="form-label">Tipo de cadena:</label>
+        <select class="form-select" id="tipoCadena">
+          <option value="auto">Detectar automáticamente</option>
+          <option value="normal">No Absorbente</option>
+          <option value="absorvente">Absorbente</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="numEstados" class="form-label">Número de estados:</label>
+        <input
+          type="number"
+          class="form-control"
+          id="numEstados"
+          min="2"
+          value="2"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="proyeccion" class="form-label">Proyección (n pasos):</label>
+        <input
+          type="number"
+          class="form-control"
+          id="proyeccion"
+          min="1"
+          value="1"
+        />
+      </div>
+
+      <button class="btn btn-primary mb-3" onclick="generarFormulario()">
+        Generar matriz y vector
+      </button>
+
+      <div class="mb-3 d-flex gap-2">
+        <button class="btn btn-warning" onclick="limpiarFormulario()">
+          Limpiar matriz
+        </button>
+        <button class="btn btn-secondary" onclick="llenarAleatorio()">
+          Llenar con valores aleatorios
+        </button>
+      </div>
+
+      <div id="formularioMatriz" class="mb-4"></div>
+      <button
+        id="calcularBtn"
+        class="btn btn-success d-none mb-4"
+        onclick="calcularMarkov()"
+      >
+        Calcular
+      </button>
+      <div id="resultado" class="table-responsive"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
